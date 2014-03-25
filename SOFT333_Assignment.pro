@@ -17,11 +17,13 @@ SOURCES += main.cpp\
         MainWindow.cpp \
     RenderArea.cpp \
     Matrix.cpp \
-    Vector.cpp
+    Vector.cpp \
+    Model.cpp
 
 HEADERS  += MainWindow.h \
     RenderArea.h \
     Matrix.h \
-    Vector.h
+    Vector.h \
+    Model.h
 
 FORMS    += MainWindow.ui
