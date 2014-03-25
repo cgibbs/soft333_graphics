@@ -12,6 +12,14 @@ Matrix::Matrix()
     }
 }
 
+Matrix::Matrix(const Matrix &m)
+{
+    // Intialise each element of the matrix.
+    for(size_t i = 0; i < ELEMS; i++) {
+        m_[i] = m.m_[i];
+    }
+}
+
 Matrix& Matrix::operator = (Matrix const& rhs)
 {
     // Copy the elements of the matrix.
@@ -45,6 +53,17 @@ Matrix Matrix::scale3d(float x, float y, float z)
     return mat;
 }
 
+Matrix Matrix::translate3d(float x, float y, float z)
+{
+    Matrix mat = identity();
+
+    mat.m_[M14] = x;
+    mat.m_[M24] = y;
+    mat.m_[M34] = z;
+
+    return mat;
+}
+
 Vector Matrix::multiplyColumnVector(const Matrix &lhs, const Vector &rhs)
 {
     Vector v;
@@ -54,4 +73,26 @@ Vector Matrix::multiplyColumnVector(const Matrix &lhs, const Vector &rhs)
     v.w_ = lhs.m_[M41]*rhs.x_ + lhs.m_[M42]*rhs.y_ + lhs.m_[M43]*rhs.z_ + lhs.m_[M44]*rhs.w_;
 
     return v;
+}
+
+Matrix Matrix::multiplyMatrix(const Matrix &lhs, const Matrix &rhs)
+{
+    Matrix m;
+
+    for(size_t r = 0; r < Matrix::ROWS; r++)
+    {
+        for(size_t c = 0; c < Matrix::COLS; c++) {
+
+            float dp =
+                    lhs.m_[0 + r * COLS] * rhs.m_[c + 0 * COLS] +
+                    lhs.m_[1 + r * COLS] * rhs.m_[c + 1 * COLS] +
+                    lhs.m_[2 + r * COLS] * rhs.m_[c + 2 * COLS] +
+                    lhs.m_[3 + r * COLS] * rhs.m_[c + 3 * COLS];
+
+            m.m_[c + r * COLS] = dp;
+
+        }
+    }
+
+    return m;
 }
