@@ -101,6 +101,8 @@ Matrix Matrix::rotateZ(float rad)
 Matrix Matrix::perspective(float focus)
 {
     Matrix m = identity();
+    m.m_[M43] = 1.0f / focus;
+    m.m_[M44] = 0.0f;
 
     return m;
 }
