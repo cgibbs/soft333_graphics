@@ -19,7 +19,15 @@ public:
     ~MainWindow();
 
 private slots:
+    /**
+     * @brief updateScene Updates the transformation matrices and queues the RenderArea to be redrawn.
+     */
     void updateScene();
+
+    /**
+     * @brief loadModel
+     */
+    void loadModel();
 
 private:
     Ui::MainWindow *ui;

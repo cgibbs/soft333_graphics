@@ -1,6 +1,8 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
+#include <QFileDialog>
+
 static float const PI = 3.14159265359f;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -12,7 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
     sliderTransZ_(nullptr),
     renderArea_(nullptr)
 {
+    setAttribute(Qt::WA_DeleteOnClose, true);
+
     ui->setupUi(this);
+
 
     // Get references to UI elements.
     renderArea_ = ui->renderArea;
@@ -32,6 +37,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(sliderRotateX_, &QSlider::valueChanged, this, &MainWindow::updateScene);
     connect(sliderRotateY_, &QSlider::valueChanged, this, &MainWindow::updateScene);
     connect(sliderRotateZ_, &QSlider::valueChanged, this, &MainWindow::updateScene);
+
+    // Set up actions.
+    connect(ui->actionLoad_Model, &QAction::triggered, this, &MainWindow::loadModel);
+    connect(ui->actionClose, &QAction::triggered, this, &MainWindow::close);
 
 
     // Setup the render area.
@@ -73,4 +82,17 @@ void MainWindow::updateScene()
 
     // Queue a redraw.
     renderArea_->update();
+}
+
+void MainWindow::loadModel()
+{
+    QString filename = QFileDialog::getOpenFileName(this, "Open Model File");
+    if(!filename.isEmpty()) {
+
+        // Load the model file.
+        Model m = ModelLoader::loadModel(filename.toStdString());
+        renderArea_->setModel(m);
+        renderArea_->update();
+
+    }
 }
