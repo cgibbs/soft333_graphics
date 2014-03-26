@@ -2,6 +2,7 @@
 #define MODEL_H
 
 #include <vector>
+#include <string>
 
 struct Vertex {
   float x, y, z;
@@ -21,6 +22,13 @@ public:
 private:
     std::vector<Vertex> vertices_;
     std::vector<int>    indexes_;
+};
+
+class ModelLoader
+{
+public:
+    static Model loadModel(std::string const& modelPath);
+
 };
 
 #endif // MODEL_H
