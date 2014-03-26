@@ -12,6 +12,9 @@ MainWindow::MainWindow(QWidget *parent) :
     sliderTransX_(nullptr),
     sliderTransY_(nullptr),
     sliderTransZ_(nullptr),
+    sliderScaleX_(nullptr),
+    sliderScaleY_(nullptr),
+    sliderScaleZ_(nullptr),
     renderArea_(nullptr)
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
@@ -28,6 +31,9 @@ MainWindow::MainWindow(QWidget *parent) :
     sliderRotateX_ = ui->horizontalSliderRotateX;
     sliderRotateY_ = ui->horizontalSliderRotateY;
     sliderRotateZ_ = ui->horizontalSliderRotateZ;
+    sliderScaleX_ = ui->horizontalSliderScaleX;
+    sliderScaleY_ = ui->horizontalSliderScaleY;
+    sliderScaleZ_ = ui->horizontalSliderScaleZ;
 
     // Set up the signals/slots for the sliders.
     connect(sliderFocus_, &QSlider::valueChanged, this, &MainWindow::updateScene);
@@ -37,6 +43,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(sliderRotateX_, &QSlider::valueChanged, this, &MainWindow::updateScene);
     connect(sliderRotateY_, &QSlider::valueChanged, this, &MainWindow::updateScene);
     connect(sliderRotateZ_, &QSlider::valueChanged, this, &MainWindow::updateScene);
+    connect(sliderScaleX_, &QSlider::valueChanged, this, &MainWindow::updateScene);
+    connect(sliderScaleY_, &QSlider::valueChanged, this, &MainWindow::updateScene);
+    connect(sliderScaleZ_, &QSlider::valueChanged, this, &MainWindow::updateScene);
 
     // Set up actions.
     connect(ui->actionLoad_Model, &QAction::triggered, this, &MainWindow::loadModel);
@@ -71,6 +80,12 @@ void MainWindow::updateScene()
                                    );
 
     model = Matrix::multiplyMatrix(model, rotateModel);
+
+    model = Matrix::multiplyMatrix(model,
+                                   Matrix::scale3d(
+                                       sliderScaleX_->value(),
+                                       sliderScaleY_->value(),
+                                       sliderScaleZ_->value()));
 
 
     renderArea_->setModelMatrix(model);

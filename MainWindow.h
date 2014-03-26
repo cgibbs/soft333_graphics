@@ -42,6 +42,10 @@ private:
     QSlider *sliderRotateY_;
     QSlider *sliderRotateZ_;
 
+    QSlider *sliderScaleX_;
+    QSlider *sliderScaleY_;
+    QSlider *sliderScaleZ_;
+
     RenderArea *renderArea_;
 };
 
