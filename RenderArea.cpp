@@ -33,6 +33,11 @@ RenderArea::RenderArea(QWidget *parent) :
     renderModel_ = Model(vertices, indexes);
 }
 
+void RenderArea::setModel(const Model &model)
+{
+    renderModel_ = model;
+}
+
 void RenderArea::setModelMatrix(const Matrix &modelMat)
 {
     modelMatrix_ = modelMat;
@@ -120,8 +125,8 @@ void RenderArea::drawTriangle(const std::vector<Vertex> &triangle, QPainter& pai
     painter.save();
 
     QPen pen;
-    pen.setColor(QColor(200, 50, 50));
-    pen.setWidth(2);
+    pen.setColor(QColor(0, 0, 0));
+    pen.setWidth(1);
 
     QBrush brush;
     brush.setColor(QColor(150,150,150));

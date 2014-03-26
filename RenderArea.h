@@ -14,6 +14,13 @@ public:
     explicit RenderArea(QWidget *parent = 0);
 
 public:
+
+    /**
+     * @brief setModel
+     * @param model
+     */
+    void setModel(Model const& model);
+
     /**
      * @brief setModelMatrix
      * @param modelMat
