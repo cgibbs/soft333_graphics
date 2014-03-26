@@ -24,9 +24,15 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
+    QSlider *sliderFocus_;
+
     QSlider *sliderTransX_;
     QSlider *sliderTransY_;
     QSlider *sliderTransZ_;
+
+    QSlider *sliderRotateX_;
+    QSlider *sliderRotateY_;
+    QSlider *sliderRotateZ_;
 
     RenderArea *renderArea_;
 };
