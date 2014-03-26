@@ -7,6 +7,10 @@
 #include "Vector.h"
 #include "Model.h"
 
+struct Triangle {
+    Vertex vertices[3];
+};
+
 class RenderArea : public QWidget
 {
     Q_OBJECT
@@ -47,6 +51,13 @@ private:
      * @param triangle Vertex array containing the vertices of the triangle in screen space.
      */
     void drawTriangle(std::vector<Vertex> const& triangle, QPainter& painter);
+
+    /**
+     * @brief drawTriangle
+     * @param triangle
+     * @param painter
+     */
+    void drawTriangle(Triangle const& triangle, QPainter& painter);
 
 private:
 
