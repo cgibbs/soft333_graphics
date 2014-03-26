@@ -62,6 +62,7 @@ void RenderArea::paintEvent(QPaintEvent * /*event*/)
     painter.setBrush(Qt::NoBrush);
     painter.drawRect(0, 0, width() -1, height() -1);
 
+    // Iterate through each triangle of the model.
     for(std::size_t t = 0; t < numTriangles; t++) {
 
         // Allocate memory for the triangle.
@@ -83,6 +84,12 @@ void RenderArea::paintEvent(QPaintEvent * /*event*/)
             vert = Matrix::multiplyColumnVector(modelMatrix_, vert);
             vert = Matrix::multiplyColumnVector(viewMatrix_, vert);
             vert = Matrix::multiplyColumnVector(perspectiveMatrix_, vert);
+
+            // Perform the perspective transformation.
+            vert.x_ = vert.x_ / vert.w_;
+            vert.y_ = vert.y_ / vert.w_;
+            vert.z_ = vert.z_ / vert.w_;
+            vert.w_ = 1.0f;
 
             // Copy the vertex into the triangle vertex array.
             triangle[i].x = vert.x_;
