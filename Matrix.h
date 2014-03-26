@@ -4,6 +4,7 @@
 #include "Vector.h"
 
 #include <iostream>
+#include <iomanip>
 
 /**
  * @brief Matrix class providing an interface for a 4x4 matrix. This matrix class provides an interface
@@ -36,6 +37,12 @@ public:
     static Matrix scale3d(float x, float y, float z);
     static Matrix translate3d(float x, float y, float z);
 
+    static Matrix rotateX(float rad);
+    static Matrix rotateY(float rad);
+    static Matrix rotateZ(float rad);
+
+    static Matrix perspective(float focus);
+
     /**
      * @brief multiplyColumnVector Performs a multiplication between a matrix and a column vector.
      * @param lhs The Matrix to multiply.
@@ -60,10 +67,11 @@ public:
      */
     inline friend std::ostream& operator << (std::ostream& out, Matrix const& mat)
     {
-        out << '|' << mat.m_[M11] << ',' << mat.m_[M12] << ',' << mat.m_[M13] << ',' << mat.m_[M14] << '|' << std::endl;
-        out << '|' << mat.m_[M21] << ',' << mat.m_[M22] << ',' << mat.m_[M23] << ',' << mat.m_[M24] << '|' << std::endl;
-        out << '|' << mat.m_[M31] << ',' << mat.m_[M32] << ',' << mat.m_[M33] << ',' << mat.m_[M34] << '|' << std::endl;
-        out << '|' << mat.m_[M41] << ',' << mat.m_[M42] << ',' << mat.m_[M43] << ',' << mat.m_[M44] << '|';
+
+        out << '|' << mat.m_[M11] << ' ' << mat.m_[M12] << ' ' << mat.m_[M13] << ' ' << mat.m_[M14] << '|' << std::endl;
+        out << '|' << mat.m_[M21] << ' ' << mat.m_[M22] << ' ' << mat.m_[M23] << ' ' << mat.m_[M24] << '|' << std::endl;
+        out << '|' << mat.m_[M31] << ' ' << mat.m_[M32] << ' ' << mat.m_[M33] << ' ' << mat.m_[M34] << '|' << std::endl;
+        out << '|' << mat.m_[M41] << ' ' << mat.m_[M42] << ' ' << mat.m_[M43] << ' ' << mat.m_[M44] << '|';
 
         return out;
     }

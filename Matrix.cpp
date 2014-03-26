@@ -1,6 +1,7 @@
 #include "Matrix.h"
 
 #include <cstdint>
+#include <cmath>
 
 using std::size_t;
 
@@ -62,6 +63,46 @@ Matrix Matrix::translate3d(float x, float y, float z)
     mat.m_[M34] = z;
 
     return mat;
+}
+
+Matrix Matrix::rotateX(float rad)
+{
+    Matrix m = identity();
+    m.m_[M22] = std::cos(rad);
+    m.m_[M23] = std::sin(rad);
+    m.m_[M32] = -std::sin(rad);
+    m.m_[M33] = std::cos(rad);
+
+    return m;
+}
+
+Matrix Matrix::rotateY(float rad)
+{
+    Matrix m = identity();
+    m.m_[M11] = std::cos(rad);
+    m.m_[M13] = -std::sin(rad);
+    m.m_[M31] = std::sin(rad);
+    m.m_[M33] = std::cos(rad);
+
+    return m;
+}
+
+Matrix Matrix::rotateZ(float rad)
+{
+    Matrix m = identity();
+    m.m_[M11] = std::cos(rad);
+    m.m_[M12] = std::sin(rad);
+    m.m_[M21] = -std::sin(rad);
+    m.m_[M22] = std::cos(rad);
+
+    return m;
+}
+
+Matrix Matrix::perspective(float focus)
+{
+    Matrix m = identity();
+
+    return m;
 }
 
 Vector Matrix::multiplyColumnVector(const Matrix &lhs, const Vector &rhs)
