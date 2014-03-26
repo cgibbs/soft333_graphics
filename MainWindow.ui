@@ -157,7 +157,13 @@
          </widget>
         </item>
         <item>
-         <widget class="QSlider" name="horizontalSlider">
+         <widget class="QSlider" name="horizontalSliderRotateX">
+          <property name="minimum">
+           <number>-360</number>
+          </property>
+          <property name="maximum">
+           <number>360</number>
+          </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -175,7 +181,13 @@
          </widget>
         </item>
         <item>
-         <widget class="QSlider" name="horizontalSlider_2">
+         <widget class="QSlider" name="horizontalSliderRotateY">
+          <property name="minimum">
+           <number>-360</number>
+          </property>
+          <property name="maximum">
+           <number>360</number>
+          </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -193,7 +205,13 @@
          </widget>
         </item>
         <item>
-         <widget class="QSlider" name="horizontalSlider_3">
+         <widget class="QSlider" name="horizontalSliderRotateZ">
+          <property name="minimum">
+           <number>-360</number>
+          </property>
+          <property name="maximum">
+           <number>360</number>
+          </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
