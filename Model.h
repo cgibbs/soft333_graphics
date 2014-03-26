@@ -11,7 +11,9 @@ class Model
 {
 public:
     Model();
-    Model(std::vector<Vertex> v, std::vector<int> i);
+    Model(std::vector<Vertex> const& v, std::vector<int> const& i);
+
+    Model& operator = (Model const& m);
 
     std::vector<Vertex> const& getVertices() const;
     std::vector<int> const& getIndexes() const;
