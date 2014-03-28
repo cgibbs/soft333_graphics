@@ -4,6 +4,21 @@
 #include <QBrush>
 #include <QPainter>
 
+static Vector calculateTriangleNormal(Triangle const& triangle)
+{
+    // Calculate the two vectors representing the plane of the triangle.
+    Vector v0 = Vector(
+                triangle.vertices[1].x - triangle.vertices[0].x,
+                triangle.vertices[1].y - triangle.vertices[0].y,
+                triangle.vertices[1].z - triangle.vertices[0].z,
+                0.0f);
+
+    Vector v1 = Vector(
+                triangle.vertices[2].x - triangle.vertices[0].x,
+                triangle.vertices[2].y - triangle.vertices[0].y,
+                triangle.vertices[2].z - triangle.vertices[0].z);
+}
+
 /**********************************************
  *
  *              RENDERAREA
