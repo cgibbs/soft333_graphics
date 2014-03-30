@@ -17,6 +17,10 @@ static Vector calculateTriangleNormal(Triangle const& triangle)
                 triangle.vertices[2].x - triangle.vertices[0].x,
                 triangle.vertices[2].y - triangle.vertices[0].y,
                 triangle.vertices[2].z - triangle.vertices[0].z);
+
+    // Calculate the cross product.
+    Vector N = Vector::crossProduct(v0, v1);
+    return Vector::normalise(N);
 }
 
 /**********************************************
@@ -34,6 +38,22 @@ RenderArea::RenderArea(QWidget *parent) :
     this->setBackgroundRole(QPalette::Base);
     this->setPalette(pal);
     this->setAutoFillBackground(true);
+
+    // Initialise the light vector.
+    setLightVector(Vector(0.0f, 0.0f, 1.0f, 0.0f));
+
+    // Set the diffuse lighting.
+    Ii_ = 0.8f;
+    Kd_ = 0.5f;
+
+    //Set up ambient lighting.
+    Ia_ = 0.2f;
+    Ka_ = 0.8f;
+
+    // Setup specular lighting.
+    Ks_ = 0.6f;
+    glossiness_ = 100;
+
 
     // Set matrices as identity.
     modelMatrix_ = Matrix::identity();
@@ -72,6 +92,43 @@ void RenderArea::setViewMatrix(const Matrix &viewMat)
 void RenderArea::setPerspectiveMatrix(const Matrix &perspectiveMat)
 {
     perspectiveMatrix_ = perspectiveMat;
+}
+
+void RenderArea::setLightVector(const Vector &lv)
+{
+    // The light vector must always be unit.
+    L_ = Vector::normalise(lv);
+}
+
+void RenderArea::setAmbientIntensity(float Ia)
+{
+    Ia_ = Ia;
+}
+
+void RenderArea::setAmbientReflectivity(float Ka)
+{
+    Ka_ = Ka;
+}
+
+void RenderArea::setDiffuseIntensity(float Ii)
+{
+    Ii_ = Ii;
+}
+
+void RenderArea::setDiffuseReflectivity(float Kd)
+{
+    Kd_ = Kd;
+}
+
+void RenderArea::setGlossiness(int n)
+{
+    glossiness_ = n;
+}
+
+
+void RenderArea::setSpecularReflectivity(float Ks)
+{
+    Ks_ = Ks;
 }
 
 void RenderArea::paintEvent(QPaintEvent * /*event*/)
@@ -136,6 +193,8 @@ void RenderArea::paintEvent(QPaintEvent * /*event*/)
     // Draw the triangles.
     for(std::size_t t = 0; t < triangleBuffer.size(); t++)
     {
+        float i = 0.0f;
+        QColor illumination(150, 150, 150);
 
         // Transform each vertex of the triangle against the remainder of the transform pipeline.
         for(std::size_t v = 0; v < 3; v++)
@@ -146,7 +205,59 @@ void RenderArea::paintEvent(QPaintEvent * /*event*/)
             vert.z_ = triangleBuffer[t].vertices[v].z;
             vert.w_ = 1.0f;
 
+            // Perform the view transformation.
             vert = Matrix::multiplyColumnVector(viewMatrix_, vert);
+
+            triangleBuffer[t].vertices[v].x = vert.x_;
+            triangleBuffer[t].vertices[v].y = vert.y_;
+            triangleBuffer[t].vertices[v].z = vert.z_;
+
+            // Calculate the illumination of the triangle.
+            // Get the normalised triangle normal.
+            Vector N = calculateTriangleNormal(triangleBuffer[t]);
+
+            // Calculate the half vector.
+            // Vector roughly representing the vector between the triangle and the viewer.
+            Vector V = Vector(
+                        -triangleBuffer[t].vertices[0].x,
+                        -triangleBuffer[t].vertices[0].y
+                        -triangleBuffer[t].vertices[0].z,
+                        0.0f);
+            V = Vector::normalise(V);
+
+            Vector H = (L_ + V) / 2.0f;
+            H = Vector::normalise(H);
+
+            // Calculate the diffuse.
+            float NHdp = Vector::dotProduct(N, H);
+            float dif = Ii_ *
+                    (Kd_ * Vector::dotProduct(L_, N) + Ks_ * std::pow(NHdp, glossiness_));
+
+
+            // Calculate ambient.
+            float amb = Ia_*Ka_;
+            float I = amb + dif;
+
+            // Clamp the light.
+            if(I > 1.0f) I = 1.0f;
+            else if(I < 0.0f) I = 0.0f;
+
+            illumination = QColor(I * 255, I * 255, I * 255);
+
+
+        }
+
+
+        // Continue the transformation.
+        for(std::size_t v = 0; v < 3; v++)
+        {
+
+            Vector vert;
+            vert.x_ = triangleBuffer[t].vertices[v].x;
+            vert.y_ = triangleBuffer[t].vertices[v].y;
+            vert.z_ = triangleBuffer[t].vertices[v].z;
+            vert.w_ = 1.0f;
+
             vert = Matrix::multiplyColumnVector(perspectiveMatrix_, vert);
 
             // Perform the perspective transformation.
@@ -160,7 +271,7 @@ void RenderArea::paintEvent(QPaintEvent * /*event*/)
             triangleBuffer[t].vertices[v].z = vert.z_;
         }
 
-        drawTriangle(triangleBuffer[t], painter);
+        drawTriangle(triangleBuffer[t], painter, illumination);
 
     }
 
@@ -207,7 +318,7 @@ void RenderArea::paintEvent(QPaintEvent * /*event*/)
 
 }
 
-void RenderArea::drawTriangle(Triangle const& triangle, QPainter& painter)
+void RenderArea::drawTriangle(Triangle const& triangle, QPainter& painter, QColor const& colour)
 {
     QPointF const points[3] = {
         QPointF(triangle.vertices[0].x, triangle.vertices[0].y),
@@ -222,11 +333,11 @@ void RenderArea::drawTriangle(Triangle const& triangle, QPainter& painter)
     pen.setWidth(1);
 
     QBrush brush;
-    brush.setColor(QColor(150,150,150));
+    brush.setColor(colour);
     brush.setStyle(Qt::SolidPattern);
 
     painter.setBrush(brush);
-    painter.setPen(pen);
+    painter.setPen(Qt::NoPen);
 
     painter.drawPolygon(points, 3);
 

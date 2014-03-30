@@ -43,6 +43,21 @@ public:
      */
     void setPerspectiveMatrix(Matrix const& perspectiveMat);
 
+    /**
+     * @brief setLightVector
+     * @param lv
+     */
+    void setLightVector(Vector const& lv);
+
+    void setAmbientIntensity(float Ia);
+    void setAmbientReflectivity(float Ka);
+
+    void setDiffuseIntensity(float Ii);
+    void setDiffuseReflectivity(float Kd);
+
+    void setGlossiness(int n);
+    void setSpecularReflectivity(float Ks);
+
 private:
     void paintEvent(QPaintEvent *event) override;
 
@@ -57,7 +72,7 @@ private:
      * @param triangle
      * @param painter
      */
-    void drawTriangle(Triangle const& triangle, QPainter& painter);
+    void drawTriangle(Triangle const& triangle, QPainter& painter, QColor const& colour);
 
 private:
 
@@ -68,6 +83,21 @@ private:
 
     // Model to render.
     Model renderModel_;
+
+    // Light source.
+    Vector L_; // Vector representing direction of light rays.
+
+    // Diffuse Lighting
+    float  Ii_; //Intensity of the light source.
+    float  Kd_; //Light reflectivity of the surface.
+
+    // Ambient Lighting.
+    float Ia_; // Intensity of the ambient light.
+    float Ka_; // Ambient light reflectivity.
+
+    // Specular lighting
+    float Ks_;  // Specular coefficient.
+    int glossiness_; // Glossiness. Large values give a more mirror like shine.
 };
 
 #endif // RENDERAREA_H

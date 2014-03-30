@@ -46,6 +46,19 @@ private:
     QSlider *sliderScaleY_;
     QSlider *sliderScaleZ_;
 
+    // Ambient Lighting.
+    QSlider *sliderIa_;
+    QSlider *sliderKa_;
+
+    // Diffuse Lighting.
+    QSlider *sliderIi_;
+    QSlider *sliderKd_;
+
+    // Light Vector.
+    QSlider *sliderLx_;
+    QSlider *sliderLy_;
+    QSlider *sliderLz_;
+
     RenderArea *renderArea_;
 };
 
